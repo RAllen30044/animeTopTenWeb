@@ -66,7 +66,8 @@ height: 300px;
   background-color: rgba(202,200,203,.2);
   width: 92%;
   display: flex;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
+  
   align-items: center;
   margin-top: 10px;
   margin-bottom: 10px;
