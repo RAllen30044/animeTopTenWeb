@@ -19,6 +19,25 @@
 
 }
 
+.list-nav{
+  display: flex;
+  text-align: center;
+  justify-content: center;
+}
+
+.list-item:hover{
+  position: relative;
+}
+.list-nav h3:hover{
+font-size: 20px;
+  color: #eb3e0e;
+  margin-top: 10px;
+  margin-bottom: auto;
+
+  cursor: pointer;
+
+}
+
 .list-item {
   padding-left: var(--size30);
 }
@@ -66,8 +85,8 @@ height: 300px;
   background-color: rgba(202,200,203,.2);
   width: 92%;
   display: flex;
-  /* flex-wrap: wrap; */
-  
+   flex-direction: column;
+  justify-content: center;
   align-items: center;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -91,11 +110,18 @@ border-radius: 8px;
   box-shadow:  1px 1px -1px var(--black);
 
 }
-.content-Wrapper{
+
+.content-wrap-wrapper{
+  width: 100%;
   display: flex;
-  flex-direction: column;
+}
+
+
+.content-wrapper{
+  display: flex;
+  /* flex-direction: column; */
   flex-wrap: wrap;
-  align-items: center;
+  
   justify-content: center;
 }
 .anime-wrapper{
@@ -115,17 +141,19 @@ margin-left: 20px;
   margin-bottom: 0;
 }
 
-.add-to-favorites{
+/* .add-to-list{
 margin: 0;
-}
+} */
 
-.add-to-favorites:hover{
+.add-to-list:hover,
+.remove-from-list:hover{
   color: var(--font-color-hover);
 }
 
 .selection{
   display: flex;
   align-items: center;
+  justify-content: center;
 margin: 0 auto;
  
 

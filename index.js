@@ -36,8 +36,37 @@ const figures = [
   "y",
   "z",
 ];
+const addToList = (list) => {
+  const selectionItem = document.getElementsByClassName("selection");
+  const selectionH6 = document.createElement("h6");
+  selectionH6.setAttribute("class", "add-to-list");
+  selectionItem[selectionItem.length - 1].appendChild(selectionH6);
+  document.getElementsByClassName("add-to-list")[
+    selectionItem.length - 1
+  ].innerHTML = `+ Add to ${list}`;
+};
+
+const favorites = () => {
+  addToList("Top Ten");
+  removeFromList("Favorites");
+};
+
+ const removeFromList = (list) => {
+  const selectionItem = document.getElementsByClassName("selection");
+  const selectionH6 = document.createElement("h6");
+  selectionH6.setAttribute("class", "remove-from-list");
+  selectionItem[selectionItem.length - 1].appendChild(selectionH6);
+  const removeItem = document.getElementsByClassName("remove-from-list");
+  removeItem[removeItem.length-1].innerHTML = `- Remove from ${list}`;
+ };
 
 const createCatagory = (char) => {
+  const listNavItem = document.getElementsByClassName("list-nav");
+  const charH6 = document.createElement("h3");
+  charH6.setAttribute("id", `select${char}`);
+  listNavItem[0].appendChild(charH6);
+  document.getElementById(`select${char}`).innerHTML = `${char}`.toUpperCase();
+
   const listItem = document.getElementsByClassName("animeList-item");
   const categoryDiv = document.createElement("div");
   categoryDiv.setAttribute("class", `${char} category`);
@@ -50,19 +79,24 @@ const createCatagory = (char) => {
   document.getElementById(`${char}`).innerHTML = `${char}`.toUpperCase();
 };
 
-const createList = (category, name, type, pic) => {
-  const categoryItem = document.getElementsByClassName(`${category}`);
-  const animeWrapperContainerDiv = document.createElement("div");
-  animeWrapperContainerDiv.setAttribute("class", "anime-wrapper-container");
-  categoryItem[0].appendChild(animeWrapperContainerDiv);
+const contentWrapper = (name, type, pic) => {
   const animeWrapperContainerItem = document.getElementsByClassName(
     "anime-wrapper-container"
   );
+  const contentWrapWrapperDiv = document.createElement("div");
+  contentWrapWrapperDiv.setAttribute("class", `content-wrap-wrapper`);
+  animeWrapperContainerItem[animeWrapperContainerItem.length - 1].appendChild(
+    contentWrapWrapperDiv
+  );
+  const contentWrapWrapperContainerItem = document.getElementsByClassName(
+    "content-wrap-wrapper"
+  );
+
   const contentWrapperDiv = document.createElement("div");
   contentWrapperDiv.setAttribute("class", "content-wrapper");
-  animeWrapperContainerItem[animeWrapperContainerItem.length - 1].appendChild(
-    contentWrapperDiv
-  );
+  contentWrapWrapperContainerItem[
+    contentWrapWrapperContainerItem.length - 1
+  ].appendChild(contentWrapperDiv);
   const contentWrapperItem = document.getElementsByClassName("content-wrapper");
   const animeWrapperDiv = document.createElement("div");
   animeWrapperDiv.setAttribute("class", "anime-wrapper");
@@ -89,7 +123,7 @@ const createList = (category, name, type, pic) => {
   textWrapperItem[textWrapperItem.length - 1].appendChild(textWrapperH5);
   document.getElementsByClassName(`animeName`)[
     textWrapperItem.length - 1
-  ].innerHTML = `${name}`;
+  ].innerHTML = `Name: ${name}`;
   document.getElementsByClassName("type")[
     textWrapperItem.length - 1
   ].innerHTML = `Type: ` + `${type}`.toUpperCase();
@@ -98,54 +132,83 @@ const createList = (category, name, type, pic) => {
   animeWrapperContainerItem[animeWrapperContainerItem.length - 1].appendChild(
     selectionDiv
   );
-  const selectionItem = document.getElementsByClassName("selection");
-  const selectionH6 = document.createElement("h6");
-  selectionH6.setAttribute("class", "add-to-favorites");
-  selectionItem[selectionItem.length - 1].appendChild(selectionH6);
-  document.getElementsByClassName("add-to-favorites")[
-    selectionItem.length - 1
-  ].innerHTML = "+ Add to Favorites";
 };
 
+const animeList = (category, name, type, pic) => {
+  const categoryItem = document.getElementsByClassName(`${category}`);
+  const animeWrapperContainerDiv = document.createElement("div");
+  animeWrapperContainerDiv.setAttribute("class", "anime-wrapper-container");
+  categoryItem[0].appendChild(animeWrapperContainerDiv);
+  contentWrapper(name, type, pic);
+ addToList("Favorites");
+};
+
+const favoritesList = (name, type, pic) => {
+  const animeListItem = document.getElementsByClassName(`animeList-item`);
+  const animeWrapperContainerDiv = document.createElement("div");
+  animeWrapperContainerDiv.setAttribute("class", "anime-wrapper-container");
+  animeListItem[1].appendChild(animeWrapperContainerDiv);
+  contentWrapper(name, type, pic);
+
+  addToList("Top Ten");
+   removeFromList("Favorites");
+};
+
+const topTenList = (name, type, pic) => {
+  const animeListItem = document.getElementsByClassName(`animeList-item`);
+  const animeWrapperContainerDiv = document.createElement("div");
+  animeWrapperContainerDiv.setAttribute("class", "anime-wrapper-container");
+  animeListItem[2].appendChild(animeWrapperContainerDiv);
+  contentWrapper(name, type, pic);
+
+ removeFromList("Top Ten");
+};
+let infoArray =[];
 const seperations = async (array) => {
-  let infoArray = [];
-  let info;
+  
+
+  
+
   for (let char of array) {
     createCatagory(char);
-
     let anime = await fetch(
       `https://cdn.animenewsnetwork.com/encyclopedia/api.xml?anime=~${char}`
     );
     let response = await anime.text();
     let parser = new DOMParser();
     let data = parser.parseFromString(response, "text/xml");
-
     for (const iterator of data.getElementsByTagName("anime")) {
       info = {
         name: iterator.getAttribute("name"),
         type: iterator.getAttribute("type"),
         pic: iterator.getElementsByTagName("info")[0].getAttribute("src"),
       };
+ 
+
       infoArray.push(info);
+
       if (info.pic) {
-        createList(char, info.name, info.type, info.pic);
+
+        animeList(char, info.name, info.type, info.pic);
       }
     }
   }
   // infoArray.sort((a, b) => a.name.localeCompare(b.name));
-  console.log(infoArray);
-};
+  for(let info of infoArray){
+    if (info.pic) {
+     favoritesList(info.name, info.type, info.pic);
+   }
+  }
+  for(let info of infoArray){
+    if (info.pic) {
+     topTenList(info.name, info.type, info.pic);
+   }
+  }
+
+}
+
+
 seperations(figures);
 
-// const test = (promiseData)=>{
-//       let sortedData= promiseData.sort((a,b)=> a-b);
-// for(let index in sortedData){
-//    )
-// }
-// }
 
-// const anime = fetch('https://cdn.animenewsnetwork.com/encyclopedia/api.xml?anime=~0');
-// let tagName;
-// let newArray=[];
-// anime.then((response)=> response.text())
-// .then((data)=> console.log(data));
+
