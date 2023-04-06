@@ -24,6 +24,25 @@
   --size150: 9.375rem;
 }
 
+
+.animeList-item::-webkit-scrollbar{
+ width: 7px;
+}
+::-webkit-scrollbar-track{
+  background: #f1f1f1;
+  box-shadow: inset 1px 0px 1px transparent;
+}
+::-webkit-scrollbar-thumb{
+  background: rgb(155, 153, 153);
+  border-radius: 25%;
+} 
+
+::-webkit-scrollbar-thumb:hover{
+  background: grey;
+} 
+
+
+
 html {
   scroll-behavior: smooth;
   width: 100%;

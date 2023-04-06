@@ -136,6 +136,7 @@ margin-left: 20px;
 
 }
 
+
 .text-wrapper{
   margin-left: 10px;
   margin-bottom: 0;
@@ -165,5 +166,21 @@ margin: 0 auto;
 
 .selection h6{
   padding: 0 10px ;
+}
+
+
+.favoritesList{
+display: none;
+}
+
+.favoritesList.isVisible{
+display: initial;
+}
+.topTenListItem{
+display: none;
+}
+
+.topTenListItem.isVisible{
+display: initial;
 }
 

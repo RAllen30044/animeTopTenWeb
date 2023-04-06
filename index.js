@@ -36,34 +36,42 @@ const figures = [
   "y",
   "z",
 ];
-const addToList = (list) => {
+const addToList = (list, attr, name) => {
   const selectionItem = document.getElementsByClassName("selection");
   const selectionH6 = document.createElement("h6");
-  selectionH6.setAttribute("class", "add-to-list");
+  selectionH6.setAttribute("class", `add-to-${attr}`);
+  selectionH6.setAttribute(`data-addto${attr}`, `${name}`);
   selectionItem[selectionItem.length - 1].appendChild(selectionH6);
-  document.getElementsByClassName("add-to-list")[
-    selectionItem.length - 1
-  ].innerHTML = `+ Add to ${list}`;
+  const addItem = document.getElementsByClassName(`add-to-${attr}`)
+  addItem[
+     addItem.length - 1
+   ].innerHTML = `+ Add to ${list}`;
+
 };
 
-const favorites = () => {
-  addToList("Top Ten");
-  removeFromList("Favorites");
-};
+// const favorites = (name) => {
+//   addToList("Top Ten", "TopTen", name);
+//   removeFromList("Favorites", "favorites", name);
+// };
 
- const removeFromList = (list) => {
+const removeFromList = (list, attr, name) => {
   const selectionItem = document.getElementsByClassName("selection");
   const selectionH6 = document.createElement("h6");
-  selectionH6.setAttribute("class", "remove-from-list");
+  selectionH6.setAttribute("class", `remove-from-${attr}`);
+  selectionH6.setAttribute(`data-removefrom${attr}`, `${name}`);
   selectionItem[selectionItem.length - 1].appendChild(selectionH6);
-  const removeItem = document.getElementsByClassName("remove-from-list");
-  removeItem[removeItem.length-1].innerHTML = `- Remove from ${list}`;
- };
+  const removeItem = document.getElementsByClassName(`remove-from-${attr}`);
+    removeItem[removeItem.length - 1].innerHTML = `- Remove from ${list}`;
+};
 
 const createCatagory = (char) => {
   const listNavItem = document.getElementsByClassName("list-nav");
   const charH6 = document.createElement("h3");
   charH6.setAttribute("id", `select${char}`);
+  charH6.setAttribute("class", `selectedCategory`);
+
+  charH6.setAttribute("data-category", `${char}`);
+
   listNavItem[0].appendChild(charH6);
   document.getElementById(`select${char}`).innerHTML = `${char}`.toUpperCase();
 
@@ -75,8 +83,18 @@ const createCatagory = (char) => {
   const categoryH3 = document.createElement("h3");
 
   categoryH3.setAttribute("id", `${char}`);
+
   categoryItem[categoryItem.length - 1].appendChild(categoryH3);
   document.getElementById(`${char}`).innerHTML = `${char}`.toUpperCase();
+};
+const scrollToCategory = () => {
+  const selectedCategory = document.getElementsByClassName("selectedCategory");
+  for (const category of selectedCategory) {
+    category.addEventListener("click", () => {
+      let categoryData = category.getAttribute("data-category");
+      document.getElementById(categoryData).scrollIntoView();
+    });
+  }
 };
 
 const contentWrapper = (name, type, pic) => {
@@ -134,41 +152,64 @@ const contentWrapper = (name, type, pic) => {
   );
 };
 
-const animeList = (category, name, type, pic) => {
+const animeList = (list, category, name, type, pic) => {
   const categoryItem = document.getElementsByClassName(`${category}`);
   const animeWrapperContainerDiv = document.createElement("div");
-  animeWrapperContainerDiv.setAttribute("class", "anime-wrapper-container");
+  animeWrapperContainerDiv.setAttribute(
+    "class",
+    `anime-wrapper-container ${list}`
+  );
+  animeWrapperContainerDiv.setAttribute("data-original", `${name}`);
+
+  animeWrapperContainerDiv.setAttribute("data-card", `${name}`);
   categoryItem[0].appendChild(animeWrapperContainerDiv);
   contentWrapper(name, type, pic);
- addToList("Favorites");
+  addToList("Favorites", "favorites", name);
 };
 
-const favoritesList = (name, type, pic) => {
+const favoritesList = (list, name, type, pic) => {
   const animeListItem = document.getElementsByClassName(`animeList-item`);
   const animeWrapperContainerDiv = document.createElement("div");
-  animeWrapperContainerDiv.setAttribute("class", "anime-wrapper-container");
+  animeWrapperContainerDiv.setAttribute(
+    "class",
+    `anime-wrapper-container ${list} isVisible `
+  );
+  animeWrapperContainerDiv.setAttribute("data-favorite", `${name}`);
+
   animeListItem[1].appendChild(animeWrapperContainerDiv);
   contentWrapper(name, type, pic);
 
-  addToList("Top Ten");
-   removeFromList("Favorites");
+  addToList("Top Ten", "topten", name);
+   removeFromList("Favorites", "favorites", name);
+
+
 };
 
-const topTenList = (name, type, pic) => {
+const topTenList = (list, name, type, pic) => {
   const animeListItem = document.getElementsByClassName(`animeList-item`);
   const animeWrapperContainerDiv = document.createElement("div");
-  animeWrapperContainerDiv.setAttribute("class", "anime-wrapper-container");
+  animeWrapperContainerDiv.setAttribute(
+    "class",
+    `anime-wrapper-container ${list} isVisible`
+  );
+  animeWrapperContainerDiv.setAttribute("data-topTen", `${name}`);
+
   animeListItem[2].appendChild(animeWrapperContainerDiv);
   contentWrapper(name, type, pic);
 
- removeFromList("Top Ten");
+  removeFromList("Top Ten", "topTen", name);
 };
-let infoArray =[];
+let infoArray = [];
+
+const listFunction = (func, list) => {
+  for (let info of infoArray) {
+    if (info.pic) {
+      func(list, info.name, info.type, info.pic);
+    }
+  }
+};
+
 const seperations = async (array) => {
-  
-
-  
-
   for (let char of array) {
     createCatagory(char);
     let anime = await fetch(
@@ -183,32 +224,21 @@ const seperations = async (array) => {
         type: iterator.getAttribute("type"),
         pic: iterator.getElementsByTagName("info")[0].getAttribute("src"),
       };
- 
 
       infoArray.push(info);
 
       if (info.pic) {
-
-        animeList(char, info.name, info.type, info.pic);
+        animeList("original-list", char, info.name, info.type, info.pic);
       }
+      
     }
+      
   }
-  // infoArray.sort((a, b) => a.name.localeCompare(b.name));
-  for(let info of infoArray){
-    if (info.pic) {
-     favoritesList(info.name, info.type, info.pic);
-   }
-  }
-  for(let info of infoArray){
-    if (info.pic) {
-     topTenList(info.name, info.type, info.pic);
-   }
-  }
+listFunction(favoritesList, "favoritesList");
+listFunction(topTenList, "topTenListItem");
 
-}
-
+  scrollToCategory();
+ 
+};
 
 seperations(figures);
-
-
-
