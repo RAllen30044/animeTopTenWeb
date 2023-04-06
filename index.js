@@ -49,20 +49,41 @@ const addToList = (list, attr, name) => {
 
 };
 
+const clickToAdd =(list) =>{
+  const addTolist = document.getElementsByClassName(`add-to-${list}`);
+  const listOfItems = document.getElementsByClassName(`${list}List`);
+ 
+ for (let addTo of addTolist) {
+   addTo.addEventListener('click',()=>{
+    let from= addTo.getAttribute(`data-addTo${list}`);
+    for(let item of listOfItems){
+     let to=item.getAttribute(`data-${list}`);
+     if(from === to){
+       item.classList.add('isVisible');
+     }
+    }
+   })
+   
+ }
+};
+
+
+
+
 // const favorites = (name) => {
 //   addToList("Top Ten", "TopTen", name);
 //   removeFromList("Favorites", "favorites", name);
 // };
 
-const removeFromList = (list, attr, name) => {
+function removeFromList(list, attr, name) {
   const selectionItem = document.getElementsByClassName("selection");
   const selectionH6 = document.createElement("h6");
   selectionH6.setAttribute("class", `remove-from-${attr}`);
   selectionH6.setAttribute(`data-removefrom${attr}`, `${name}`);
   selectionItem[selectionItem.length - 1].appendChild(selectionH6);
   const removeItem = document.getElementsByClassName(`remove-from-${attr}`);
-    removeItem[removeItem.length - 1].innerHTML = `- Remove from ${list}`;
-};
+  removeItem[removeItem.length - 1].innerHTML = `- Remove from ${list}`;
+}
 
 const createCatagory = (char) => {
   const listNavItem = document.getElementsByClassName("list-nav");
@@ -172,9 +193,9 @@ const favoritesList = (list, name, type, pic) => {
   const animeWrapperContainerDiv = document.createElement("div");
   animeWrapperContainerDiv.setAttribute(
     "class",
-    `anime-wrapper-container ${list} isVisible `
+    `anime-wrapper-container ${list}  `
   );
-  animeWrapperContainerDiv.setAttribute("data-favorite", `${name}`);
+  animeWrapperContainerDiv.setAttribute("data-favorites", `${name}`);
 
   animeListItem[1].appendChild(animeWrapperContainerDiv);
   contentWrapper(name, type, pic);
@@ -190,14 +211,14 @@ const topTenList = (list, name, type, pic) => {
   const animeWrapperContainerDiv = document.createElement("div");
   animeWrapperContainerDiv.setAttribute(
     "class",
-    `anime-wrapper-container ${list} isVisible`
+    `anime-wrapper-container ${list} `
   );
-  animeWrapperContainerDiv.setAttribute("data-topTen", `${name}`);
+  animeWrapperContainerDiv.setAttribute("data-topten", `${name}`);
 
   animeListItem[2].appendChild(animeWrapperContainerDiv);
   contentWrapper(name, type, pic);
 
-  removeFromList("Top Ten", "topTen", name);
+  removeFromList("Top Ten", "topten", name);
 };
 let infoArray = [];
 
@@ -235,10 +256,17 @@ const seperations = async (array) => {
       
   }
 listFunction(favoritesList, "favoritesList");
-listFunction(topTenList, "topTenListItem");
-
-  scrollToCategory();
+listFunction(topTenList, "toptenList");
+scrollToCategory();
  
+clickToAdd('favorites');
+clickToAdd('topten');
+/* 
+On click of add, add is visible to class that has data favorite/topten with the same name
+On click of add, remove is visible to class that has data favorite/topten with the same name
+*/
+
+
 };
 
 seperations(figures);

@@ -176,11 +176,11 @@ display: none;
 .favoritesList.isVisible{
 display: initial;
 }
-.topTenListItem{
-display: none;
-}
-
-.topTenListItem.isVisible{
-display: initial;
-}
+.toptenList{
+  display: none;
+  }
+  
+  .toptenList.isVisible{
+  display: initial;
+  }
 
