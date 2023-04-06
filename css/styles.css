@@ -146,8 +146,10 @@ margin-left: 20px;
 margin: 0;
 } */
 
-.add-to-list:hover,
-.remove-from-list:hover{
+.add-to-favorites:hover,
+.remove-from-favorites:hover,
+.add-to-topten:hover,
+.remove-from-topten:hover{
   color: var(--font-color-hover);
 }
 
@@ -174,13 +176,13 @@ display: none;
 }
 
 .favoritesList.isVisible{
-display: initial;
+display: flex;
 }
 .toptenList{
   display: none;
   }
   
   .toptenList.isVisible{
-  display: initial;
+  display: flex;
   }
 

@@ -85,6 +85,19 @@ function removeFromList(list, attr, name) {
   removeItem[removeItem.length - 1].innerHTML = `- Remove from ${list}`;
 }
 
+const clickToRemove = (list)=>{
+  const removeFromList = document.getElementsByClassName(`remove-from-${list}`);
+  for(let listing of removeFromList){
+    
+  listing.addEventListener('click', ()=>{
+    listing.parentElement.parentElement.classList.remove('isVisible');
+
+  })
+
+  }
+}
+
+
 const createCatagory = (char) => {
   const listNavItem = document.getElementsByClassName("list-nav");
   const charH6 = document.createElement("h3");
@@ -193,7 +206,7 @@ const favoritesList = (list, name, type, pic) => {
   const animeWrapperContainerDiv = document.createElement("div");
   animeWrapperContainerDiv.setAttribute(
     "class",
-    `anime-wrapper-container ${list}  `
+    `anime-wrapper-container ${list} `
   );
   animeWrapperContainerDiv.setAttribute("data-favorites", `${name}`);
 
@@ -261,6 +274,9 @@ scrollToCategory();
  
 clickToAdd('favorites');
 clickToAdd('topten');
+
+clickToRemove('favorites')
+clickToRemove('topten')
 /* 
 On click of add, add is visible to class that has data favorite/topten with the same name
 On click of add, remove is visible to class that has data favorite/topten with the same name
