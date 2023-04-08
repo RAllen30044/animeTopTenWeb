@@ -1,41 +1,54 @@
 const figures = [
-  0,
-  1,
-  2,
-  3,
-  4,
-  5,
-  6,
-  7,
-  8,
-  9,
-  "a",
-  "b",
-  "c",
-  "d",
-  "e",
-  "f",
-  "g",
-  "h",
-  "i",
-  "j",
-  "k",
-  "l",
-  "m",
-  "n",
-  "o",
-  "p",
-  "q",
-  "r",
-  "s",
-  "t",
-  "u",
-  "v",
-  "w",
-  "x",
-  "y",
-  "z",
+  // 0,
+  // 1,
+  // 2,
+  // 3,
+  // 4,
+  // 5,
+  // 6,
+  // 7,
+  // 8,
+  // 9,
+  // "a",
+  // "b",
+  // "c",
+  // "d",
+  // "e",
+  // "f",
+  // "g",
+  // "h",
+   "i",
+  // "j",
+  // "k",
+  // "l",
+  // "m",
+  // "n",
+  // "o",
+  // "p",
+  // "q",
+  // "r",
+  // "s",
+  // "t",
+  // "u",
+  // "v",
+  // "w",
+  // "x",
+  // "y",
+  //  "z",
 ];
+
+const contentCounter = (listName, count)=>{
+
+
+  const list = document.getElementsByClassName(`${listName}`);
+  const counter = document.createElement('h4');
+  counter.setAttribute('class', 'counter');
+  list[0].appendChild(counter);
+  const counterItem = document.getElementsByClassName('counter');
+  counterItem[counterItem.length-1].innerHTML=`The count is ${count}`;
+  
+  }
+
 const addToList = (list, attr, name) => {
   const selectionItem = document.getElementsByClassName("selection");
   const selectionH6 = document.createElement("h6");
@@ -49,17 +62,59 @@ const addToList = (list, attr, name) => {
 
 };
 
-const clickToAdd =(list) =>{
+let animeItemCounter ;
+const clickToAdd =(list, toList, fromList) =>{
   const addTolist = document.getElementsByClassName(`add-to-${list}`);
   const listOfItems = document.getElementsByClassName(`${list}List`);
- 
+
+  let animeItems = document.getElementsByClassName(`original-list isVisible`)
+  let originItems = document.getElementsByClassName(`${fromList} isVisible`)
+  let destinationItems =document.getElementsByClassName(`${toList} isVisible`)
+  const counterItem = document.getElementsByClassName('counter');
+ animeItemCounter = animeItems.length;
+ let originItemCounter = originItems.length;
+let destinationItemsCounter = destinationItems.length;
+ let toIndex;
+ let fromIndex;
+switch (toList) {
+  case 'favoritesList':
+    toIndex =1;
+    break;
+  case `toptenList`:
+    toIndex= 2;
+    break;
+
+  default:
+    console.log('Error in to Index');
+    break;
+}
+switch (fromList) {
+  case 'original-list':
+    fromIndex =0;
+    break;
+  case `favoritesList`:
+    fromIndex= 1;
+    break;
+
+  default:
+    console.log('Error in to Index');
+    break;
+}
+
  for (let addTo of addTolist) {
    addTo.addEventListener('click',()=>{
     let from= addTo.getAttribute(`data-addTo${list}`);
+  
+    
     for(let item of listOfItems){
      let to=item.getAttribute(`data-${list}`);
      if(from === to){
        item.classList.add('isVisible');
+       addTo.parentElement.parentElement.classList.remove('isVisible');
+       originItemCounter--;
+       destinationItemsCounter++;
+       counterItem[fromIndex].innerHTML=`The count is ${originItemCounter}`;
+       counterItem[toIndex].innerHTML=`The count is ${destinationItemsCounter}`;
      }
     }
    })
@@ -131,6 +186,8 @@ const scrollToCategory = () => {
   }
 };
 
+
+
 const contentWrapper = (name, type, pic) => {
   const animeWrapperContainerItem = document.getElementsByClassName(
     "anime-wrapper-container"
@@ -191,7 +248,7 @@ const animeList = (list, category, name, type, pic) => {
   const animeWrapperContainerDiv = document.createElement("div");
   animeWrapperContainerDiv.setAttribute(
     "class",
-    `anime-wrapper-container ${list}`
+    `anime-wrapper-container ${list} isVisible`
   );
   animeWrapperContainerDiv.setAttribute("data-original", `${name}`);
 
@@ -199,6 +256,8 @@ const animeList = (list, category, name, type, pic) => {
   categoryItem[0].appendChild(animeWrapperContainerDiv);
   contentWrapper(name, type, pic);
   addToList("Favorites", "favorites", name);
+ 
+  
 };
 
 const favoritesList = (list, name, type, pic) => {
@@ -243,9 +302,13 @@ const listFunction = (func, list) => {
   }
 };
 
+
+
 const seperations = async (array) => {
+ 
   for (let char of array) {
-    createCatagory(char);
+
+     createCatagory(char);
     let anime = await fetch(
       `https://cdn.animenewsnetwork.com/encyclopedia/api.xml?anime=~${char}`
     );
@@ -264,19 +327,31 @@ const seperations = async (array) => {
       if (info.pic) {
         animeList("original-list", char, info.name, info.type, info.pic);
       }
-      
+   
     }
-      
+
   }
 listFunction(favoritesList, "favoritesList");
 listFunction(topTenList, "toptenList");
 scrollToCategory();
- 
-clickToAdd('favorites');
-clickToAdd('topten');
+
+clickToAdd('favorites', 'favoritesList','original-list');
+clickToAdd(`topten`,'toptenList', 'favoritesList');
+contentCounter( 'animeList', animeItemCounter);
+contentCounter( 'favorites',0);
+
+contentCounter( 'topTenList', 0);
+
+
+
 
 clickToRemove('favorites')
 clickToRemove('topten')
+//let visibleItems = document.getElementsByClassName(`original-list isVisible`)
+
+
+
+
 /* 
 On click of add, add is visible to class that has data favorite/topten with the same name
 On click of add, remove is visible to class that has data favorite/topten with the same name
