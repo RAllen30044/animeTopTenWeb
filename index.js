@@ -11,13 +11,13 @@ const figures = [
   // 9,
   // "a",
   // "b",
-  // "c",
+  "c",
   // "d",
-  // "e",
+  //"e",
   // "f",
   // "g",
   // "h",
-   "i",
+  //  "i",
   // "j",
   // "k",
   // "l",
@@ -37,133 +37,116 @@ const figures = [
   //  "z",
 ];
 
-const contentCounter = (listName, count)=>{
-
-
+const contentCounter = (listName, count) => {
   const list = document.getElementsByClassName(`${listName}`);
-  const counter = document.createElement('h4');
-  counter.setAttribute('class', 'counter');
+  const counter = document.createElement("h4");
+  counter.setAttribute("class", "counter");
   list[0].appendChild(counter);
-  const counterItem = document.getElementsByClassName('counter');
-  counterItem[counterItem.length-1].innerHTML=`The count is ${count}`;
-  
-  }
-
-const addToList = (list, attr, name) => {
+  const counterItem = document.getElementsByClassName("counter");
+  counterItem[counterItem.length - 1].innerHTML = `The count is ${count}`;
+};
+const addToList = () => {
   const selectionItem = document.getElementsByClassName("selection");
   const selectionH6 = document.createElement("h6");
-  selectionH6.setAttribute("class", `add-to-${attr}`);
-  selectionH6.setAttribute(`data-addto${attr}`, `${name}`);
-  selectionItem[selectionItem.length - 1].appendChild(selectionH6);
-  const addItem = document.getElementsByClassName(`add-to-${attr}`)
-  addItem[
-     addItem.length - 1
-   ].innerHTML = `+ Add to ${list}`;
+  selectionH6.setAttribute("class", `clickMe`);
 
+  selectionItem[selectionItem.length - 1].appendChild(selectionH6);
+  const addItem = document.getElementsByClassName(`clickMe`);
+  addItem[addItem.length - 1].innerHTML = `Click to Add `;
 };
 
-let animeItemCounter ;
-const clickToAdd =(list, toList, fromList) =>{
-  const addTolist = document.getElementsByClassName(`add-to-${list}`);
-  const listOfItems = document.getElementsByClassName(`${list}List`);
-
-  let animeItems = document.getElementsByClassName(`original-list isVisible`)
-  let originItems = document.getElementsByClassName(`${fromList} isVisible`)
-  let destinationItems =document.getElementsByClassName(`${toList} isVisible`)
-  const counterItem = document.getElementsByClassName('counter');
- animeItemCounter = animeItems.length;
- let originItemCounter = originItems.length;
-let destinationItemsCounter = destinationItems.length;
- let toIndex;
- let fromIndex;
-switch (toList) {
-  case 'favoritesList':
-    toIndex =1;
-    break;
-  case `toptenList`:
-    toIndex= 2;
-    break;
-
-  default:
-    console.log('Error in to Index');
-    break;
-}
-switch (fromList) {
-  case 'original-list':
-    fromIndex =0;
-    break;
-  case `favoritesList`:
-    fromIndex= 1;
-    break;
-
-  default:
-    console.log('Error in to Index');
-    break;
-}
-
- for (let addTo of addTolist) {
-   addTo.addEventListener('click',()=>{
-    let from= addTo.getAttribute(`data-addTo${list}`);
-  
-    
-    for(let item of listOfItems){
-     let to=item.getAttribute(`data-${list}`);
-     if(from === to){
-       item.classList.add('isVisible');
-       addTo.parentElement.parentElement.classList.remove('isVisible');
-       originItemCounter--;
-       destinationItemsCounter++;
-       counterItem[fromIndex].innerHTML=`The count is ${originItemCounter}`;
-       counterItem[toIndex].innerHTML=`The count is ${destinationItemsCounter}`;
-     }
-    }
-   })
-   
- }
-};
-
-
-
-
-// const favorites = (name) => {
-//   addToList("Top Ten", "TopTen", name);
-//   removeFromList("Favorites", "favorites", name);
-// };
-
-function removeFromList(list, attr, name) {
-  const selectionItem = document.getElementsByClassName("selection");
-  const selectionH6 = document.createElement("h6");
-  selectionH6.setAttribute("class", `remove-from-${attr}`);
-  selectionH6.setAttribute(`data-removefrom${attr}`, `${name}`);
-  selectionItem[selectionItem.length - 1].appendChild(selectionH6);
-  const removeItem = document.getElementsByClassName(`remove-from-${attr}`);
-  removeItem[removeItem.length - 1].innerHTML = `- Remove from ${list}`;
-}
-
-const clickToRemove = (list)=>{
-  const removeFromList = document.getElementsByClassName(`remove-from-${list}`);
-  for(let listing of removeFromList){
-    
-  listing.addEventListener('click', ()=>{
-    listing.parentElement.parentElement.classList.remove('isVisible');
-
-  })
-
+const sortData = (direction, array) => {
+  if (direction === "desc") {
+    array.sort((a, b) => {
+      if (a.dataset.card.toUpperCase() > b.dataset.card.toUpperCase())
+        return -1;
+      if (a.dataset.card.toUpperCase() < b.dataset.card.toUpperCase()) return 1;
+      return 0;
+    });
+  } else {
+    array.sort((a, b) => {
+      if (a.dataset.card.toUpperCase() > b.dataset.card.toUpperCase()) return 1;
+      if (a.dataset.card.toUpperCase() < b.dataset.card.toUpperCase())
+        return -1;
+      return 0;
+    });
   }
-}
+};
 
+const sort = (arrayList, toList) => {
+  const btn = document.getElementsByClassName("btn");
 
-const createCatagory = (char) => {
-  const listNavItem = document.getElementsByClassName("list-nav");
-  const charH6 = document.createElement("h3");
-  charH6.setAttribute("id", `select${char}`);
-  charH6.setAttribute("class", `selectedCategory`);
+  const sortBtn = Array.from(btn);
 
-  charH6.setAttribute("data-category", `${char}`);
+  sortBtn.forEach((button) => {
+    button.addEventListener("click", () => {
+      sortData(button.dataset.sort, arrayList);
+      if (arrayList) {
+        arrayList.forEach((item) => toList.append(item));
+      }
+    });
+  });
+};
+const append = (id, array, originArray, container, text) => {
+  const deleted = originArray.splice(id, 1);
+  array.push(deleted[0]);
+  array.forEach((element) => {
+    container.append(element);
+    element.childNodes[1].childNodes[0].innerHTML = `${text}`;
+  });
+};
 
-  listNavItem[0].appendChild(charH6);
-  document.getElementById(`select${char}`).innerHTML = `${char}`.toUpperCase();
+const clickAction = () => {
+  const button = document.getElementsByClassName(`clickMe`);
+  const animeListItems = document.getElementsByClassName(
+    "anime-wrapper-container"
+  );
+  const newArray = Array.from(button);
 
+  const favoritesListArray = [];
+  const originalListArray = Array.from(animeListItems);
+
+  const originalList = document.getElementById("original-list");
+
+  const favorites = document.getElementById("favorites");
+
+  newArray.forEach((element) => {
+    element.addEventListener("click", (event) => {
+      const originindex = originalListArray.indexOf(
+        event.target.parentElement.parentElement
+      );
+      const favoritesIndex = favoritesListArray.indexOf(
+        event.target.parentElement.parentElement
+      );
+
+      if (
+        element.parentElement.parentElement.parentElement.parentElement.id ===
+          "original-list" ||
+        element.parentElement.parentElement.parentElement.id === "original-list"
+      ) {
+        append(
+          originindex,
+          favoritesListArray,
+          originalListArray,
+          favorites,
+          "Click to Remove"
+        );
+      } else {
+        append(
+          favoritesIndex,
+          originalListArray,
+          favoritesListArray,
+          originalList,
+          "Click to Add"
+        );
+      }
+    });
+  });
+  sort(originalListArray, originalList);
+  sort(favoritesListArray, favorites);
+};
+
+const createCatagoryItem = (char) => {
   const listItem = document.getElementsByClassName("animeList-item");
   const categoryDiv = document.createElement("div");
   categoryDiv.setAttribute("class", `${char} category`);
@@ -176,6 +159,19 @@ const createCatagory = (char) => {
   categoryItem[categoryItem.length - 1].appendChild(categoryH3);
   document.getElementById(`${char}`).innerHTML = `${char}`.toUpperCase();
 };
+
+const createCatagory = (char) => {
+  const listNavItem = document.getElementsByClassName("list-nav");
+  const charH6 = document.createElement("h3");
+  charH6.setAttribute("id", `select${char}`);
+  charH6.setAttribute("class", `selectedCategory`);
+
+  charH6.setAttribute("data-category", `${char}`);
+
+  listNavItem[0].appendChild(charH6);
+  document.getElementById(`select${char}`).innerHTML = `${char}`.toUpperCase();
+  createCatagoryItem(char);
+};
 const scrollToCategory = () => {
   const selectedCategory = document.getElementsByClassName("selectedCategory");
   for (const category of selectedCategory) {
@@ -185,8 +181,6 @@ const scrollToCategory = () => {
     });
   }
 };
-
-
 
 const contentWrapper = (name, type, pic) => {
   const animeWrapperContainerItem = document.getElementsByClassName(
@@ -243,72 +237,24 @@ const contentWrapper = (name, type, pic) => {
   );
 };
 
-const animeList = (list, category, name, type, pic) => {
+const animeList = (category, name, type, pic) => {
   const categoryItem = document.getElementsByClassName(`${category}`);
   const animeWrapperContainerDiv = document.createElement("div");
-  animeWrapperContainerDiv.setAttribute(
-    "class",
-    `anime-wrapper-container ${list} isVisible`
-  );
+  animeWrapperContainerDiv.setAttribute("class", `anime-wrapper-container `);
+
   animeWrapperContainerDiv.setAttribute("data-original", `${name}`);
 
   animeWrapperContainerDiv.setAttribute("data-card", `${name}`);
   categoryItem[0].appendChild(animeWrapperContainerDiv);
   contentWrapper(name, type, pic);
-  addToList("Favorites", "favorites", name);
- 
-  
+  addToList();
 };
 
-const favoritesList = (list, name, type, pic) => {
-  const animeListItem = document.getElementsByClassName(`animeList-item`);
-  const animeWrapperContainerDiv = document.createElement("div");
-  animeWrapperContainerDiv.setAttribute(
-    "class",
-    `anime-wrapper-container ${list} `
-  );
-  animeWrapperContainerDiv.setAttribute("data-favorites", `${name}`);
-
-  animeListItem[1].appendChild(animeWrapperContainerDiv);
-  contentWrapper(name, type, pic);
-
-  addToList("Top Ten", "topten", name);
-   removeFromList("Favorites", "favorites", name);
-
-
-};
-
-const topTenList = (list, name, type, pic) => {
-  const animeListItem = document.getElementsByClassName(`animeList-item`);
-  const animeWrapperContainerDiv = document.createElement("div");
-  animeWrapperContainerDiv.setAttribute(
-    "class",
-    `anime-wrapper-container ${list} `
-  );
-  animeWrapperContainerDiv.setAttribute("data-topten", `${name}`);
-
-  animeListItem[2].appendChild(animeWrapperContainerDiv);
-  contentWrapper(name, type, pic);
-
-  removeFromList("Top Ten", "topten", name);
-};
 let infoArray = [];
 
-const listFunction = (func, list) => {
-  for (let info of infoArray) {
-    if (info.pic) {
-      func(list, info.name, info.type, info.pic);
-    }
-  }
-};
-
-
-
 const seperations = async (array) => {
- 
   for (let char of array) {
-
-     createCatagory(char);
+    createCatagory(char);
     let anime = await fetch(
       `https://cdn.animenewsnetwork.com/encyclopedia/api.xml?anime=~${char}`
     );
@@ -325,39 +271,13 @@ const seperations = async (array) => {
       infoArray.push(info);
 
       if (info.pic) {
-        animeList("original-list", char, info.name, info.type, info.pic);
+        animeList(char, info.name, info.type, info.pic);
       }
-   
     }
-
   }
-listFunction(favoritesList, "favoritesList");
-listFunction(topTenList, "toptenList");
-scrollToCategory();
+  clickAction();
 
-clickToAdd('favorites', 'favoritesList','original-list');
-clickToAdd(`topten`,'toptenList', 'favoritesList');
-contentCounter( 'animeList', animeItemCounter);
-contentCounter( 'favorites',0);
-
-contentCounter( 'topTenList', 0);
-
-
-
-
-clickToRemove('favorites')
-clickToRemove('topten')
-//let visibleItems = document.getElementsByClassName(`original-list isVisible`)
-
-
-
-
-/* 
-On click of add, add is visible to class that has data favorite/topten with the same name
-On click of add, remove is visible to class that has data favorite/topten with the same name
-*/
-
-
+  scrollToCategory();
 };
 
 seperations(figures);
