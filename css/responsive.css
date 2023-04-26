@@ -1,0 +1,27 @@
+@media (max-width: 999px){
+
+      .sorting{
+            margin-left: 0;
+            justify-content: center;
+            
+           
+      }
+      .sorting h2{
+            text-align: center;
+            padding-right: 50px;
+            
+      }
+
+
+}
+@media (max-width: 768px){
+.top-nav{
+      display: block;
+      text-align: center;
+}
+      .anime-wrapper-container{
+            height: auto;
+      }
+
+
+}

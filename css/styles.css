@@ -1,4 +1,4 @@
-.top-nav {
+.top-nav, a {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -28,7 +28,8 @@
 .list-item:hover{
   position: relative;
 }
-.list-nav h3:hover{
+.list-nav h3:hover,
+a:hover{
 font-size: 20px;
   color: #eb3e0e;
   margin-top: 10px;
@@ -73,7 +74,8 @@ font-size: 20px;
 .animeList-item{
  
   max-height: 500px;
-  overflow-y: scroll;
+   overflow-y: scroll; 
+
 max-width: 500px;
 margin-bottom: var(--size100);
 }
@@ -111,6 +113,11 @@ border-radius: 8px;
 
 }
 
+#favorites{
+  margin-top:83px;
+
+}
+
 .content-wrap-wrapper{
   width: 100%;
   display: flex;
@@ -142,10 +149,6 @@ margin-left: 20px;
   margin-bottom: 0;
 }
 
-/* .add-to-list{
-margin: 0;
-} */
-
 
 
 .selection{
@@ -166,18 +169,24 @@ margin: 0 auto;
 }
 
 
-.favoritesList{
-display: none;
+.counter{
+  text-align: center;
 }
+
+
+
 
 .sorting{
   display: flex;
   margin-left: var(--size150);
+  flex-wrap: wrap;
 }
 
 .sorting h2{
   padding-right: var(--size100);
 }
+
+
 
 #a-z:hover,
 #z-a:hover,

@@ -37,14 +37,31 @@ const figures = [
   //  "z",
 ];
 
-const contentCounter = (listName, count) => {
-  const list = document.getElementsByClassName(`${listName}`);
-  const counter = document.createElement("h4");
-  counter.setAttribute("class", "counter");
-  list[0].appendChild(counter);
+const contentCounter = (type) => {
+  const animeList = document.getElementsByClassName(`animeList`);
+  const favoritesList = document.getElementsByClassName("favorites");
+  let count = 0;
+  let favCount = 0;
+  const originalCounter = document.createElement("h4");
+  const favCounter = document.createElement("h4");
+  originalCounter.setAttribute("class", "counter");
+  favCounter.setAttribute("class", "counter");
+  animeList[0].appendChild(originalCounter);
+  favoritesList[0].appendChild(favCounter);
   const counterItem = document.getElementsByClassName("counter");
-  counterItem[counterItem.length - 1].innerHTML = `The count is ${count}`;
-};
+  const myType = document.getElementsByClassName("type");
+  const types = Array.from(myType);
+  types.forEach((element) => {
+    console.log(element.dataset.type);
+    if (element.dataset.type.toLowerCase() === `${type}`.toLowerCase()) {
+      count++;
+    }
+  });
+
+  counterItem[0].innerHTML = `The ${type} count is ${count} on this list`;
+  counterItem[1].innerHTML = `The ${type} count is ${favCount} on this list`;
+}
+
 const addToList = () => {
   const selectionItem = document.getElementsByClassName("selection");
   const selectionH6 = document.createElement("h6");
@@ -73,7 +90,7 @@ const sortData = (direction, array) => {
   }
 };
 
-const sort = (arrayList, toList) => {
+const toggle = (arrayList, toList) => {
   const btn = document.getElementsByClassName("btn");
 
   const sortBtn = Array.from(btn);
@@ -105,13 +122,30 @@ const clickAction = () => {
 
   const favoritesListArray = [];
   const originalListArray = Array.from(animeListItems);
-
+  let originalListCount = 0;
+  let favoritesListCount = 0;
   const originalList = document.getElementById("original-list");
 
+  console.log(originalList);
   const favorites = document.getElementById("favorites");
+  const counter = document.getElementsByClassName("counter");
+  const weArray = Array.from(counter);
+  console.log(weArray[0].innerHTML);
 
   newArray.forEach((element) => {
+    const types =
+      element.parentElement.parentElement.firstChild.firstChild.firstChild
+        .childNodes[1].childNodes[1];
+
+    if (types.dataset.type.toLowerCase() === "tv") {
+      originalListCount++;
+    }
+    
     element.addEventListener("click", (event) => {
+      const targetTypes =
+        event.target.parentElement.parentElement.firstChild.firstChild
+          .firstChild.childNodes[1].childNodes[1];
+      console.log(targetTypes.dataset.type);
       const originindex = originalListArray.indexOf(
         event.target.parentElement.parentElement
       );
@@ -131,6 +165,13 @@ const clickAction = () => {
           favorites,
           "Click to Remove"
         );
+        if(targetTypes.dataset.type.toLowerCase() === "tv") {
+          originalListCount--;
+          favoritesListCount++;
+          weArray[0].innerHTML =`The TV count is ${originalListCount} on this list`;
+          weArray[1].innerHTML =`The TV count is ${favoritesListCount} on this list`;
+        
+        }
       } else {
         append(
           favoritesIndex,
@@ -139,11 +180,19 @@ const clickAction = () => {
           originalList,
           "Click to Add"
         );
+        if (targetTypes.dataset.type.toLowerCase() === "tv") {
+          originalListCount++;
+          favoritesListCount--;
+          console.log(originalListCount);
+          console.log(favoritesListCount);
+          weArray[0].innerHTML =`The TV count is ${originalListCount} on this list`;
+          weArray[1].innerHTML =`The TV count is ${favoritesListCount} on this list`;
+        }
       }
     });
   });
-  sort(originalListArray, originalList);
-  sort(favoritesListArray, favorites);
+  toggle(originalListArray, originalList);
+  toggle(favoritesListArray, favorites);
 };
 
 const createCatagoryItem = (char) => {
@@ -222,6 +271,7 @@ const contentWrapper = (name, type, pic) => {
   textWrapperItem[textWrapperItem.length - 1].appendChild(textWrapperH4);
   const textWrapperH5 = document.createElement("h5");
   textWrapperH5.setAttribute("class", `type`);
+  textWrapperH5.setAttribute("data-type", `${type}`);
 
   textWrapperItem[textWrapperItem.length - 1].appendChild(textWrapperH5);
   document.getElementsByClassName(`animeName`)[
@@ -275,9 +325,11 @@ const seperations = async (array) => {
       }
     }
   }
-  clickAction();
+  contentCounter('TV');
 
   scrollToCategory();
+
+  clickAction();
 };
 
 seperations(figures);
