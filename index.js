@@ -52,7 +52,7 @@ const contentCounter = (type) => {
   const myType = document.getElementsByClassName("type");
   const types = Array.from(myType);
   types.forEach((element) => {
-    console.log(element.dataset.type);
+   
     if (element.dataset.type.toLowerCase() === `${type}`.toLowerCase()) {
       count++;
     }
@@ -60,14 +60,13 @@ const contentCounter = (type) => {
 
   counterItem[0].innerHTML = `The ${type} count is ${count} on this list`;
   counterItem[1].innerHTML = `The ${type} count is ${favCount} on this list`;
-}
+};
 
 const addToList = () => {
   const selectionItem = document.getElementsByClassName("selection");
   const selectionH6 = document.createElement("h6");
   selectionH6.setAttribute("class", `clickMe`);
-
-  selectionItem[selectionItem.length - 1].appendChild(selectionH6);
+selectionItem[selectionItem.length - 1].appendChild(selectionH6);
   const addItem = document.getElementsByClassName(`clickMe`);
   addItem[addItem.length - 1].innerHTML = `Click to Add `;
 };
@@ -92,10 +91,8 @@ const sortData = (direction, array) => {
 
 const toggle = (arrayList, toList) => {
   const btn = document.getElementsByClassName("btn");
-
-  const sortBtn = Array.from(btn);
-
-  sortBtn.forEach((button) => {
+const sortBtn = Array.from(btn);
+sortBtn.forEach((button) => {
     button.addEventListener("click", () => {
       sortData(button.dataset.sort, arrayList);
       if (arrayList) {
@@ -119,40 +116,33 @@ const clickAction = () => {
     "anime-wrapper-container"
   );
   const newArray = Array.from(button);
-
   const favoritesListArray = [];
   const originalListArray = Array.from(animeListItems);
   let originalListCount = 0;
   let favoritesListCount = 0;
   const originalList = document.getElementById("original-list");
-
-  console.log(originalList);
   const favorites = document.getElementById("favorites");
   const counter = document.getElementsByClassName("counter");
-  const weArray = Array.from(counter);
-  console.log(weArray[0].innerHTML);
+  const countingArray = Array.from(counter);
+  
 
   newArray.forEach((element) => {
     const types =
       element.parentElement.parentElement.firstChild.firstChild.firstChild
         .childNodes[1].childNodes[1];
-
-    if (types.dataset.type.toLowerCase() === "tv") {
+if (types.dataset.type.toLowerCase() === "tv") {
       originalListCount++;
     }
-    
-    element.addEventListener("click", (event) => {
+ element.addEventListener("click", (event) => {
       const targetTypes =
         event.target.parentElement.parentElement.firstChild.firstChild
           .firstChild.childNodes[1].childNodes[1];
-      console.log(targetTypes.dataset.type);
-      const originindex = originalListArray.indexOf(
+     const originindex = originalListArray.indexOf(
         event.target.parentElement.parentElement
       );
       const favoritesIndex = favoritesListArray.indexOf(
         event.target.parentElement.parentElement
       );
-
       if (
         element.parentElement.parentElement.parentElement.parentElement.id ===
           "original-list" ||
@@ -165,12 +155,11 @@ const clickAction = () => {
           favorites,
           "Click to Remove"
         );
-        if(targetTypes.dataset.type.toLowerCase() === "tv") {
+        if (targetTypes.dataset.type.toLowerCase() === "tv") {
           originalListCount--;
           favoritesListCount++;
-          weArray[0].innerHTML =`The TV count is ${originalListCount} on this list`;
-          weArray[1].innerHTML =`The TV count is ${favoritesListCount} on this list`;
-        
+         countingArray[0].innerHTML = `The TV count is ${originalListCount} on this list`;
+         countingArray[1].innerHTML = `The TV count is ${favoritesListCount} on this list`;
         }
       } else {
         append(
@@ -183,10 +172,8 @@ const clickAction = () => {
         if (targetTypes.dataset.type.toLowerCase() === "tv") {
           originalListCount++;
           favoritesListCount--;
-          console.log(originalListCount);
-          console.log(favoritesListCount);
-          weArray[0].innerHTML =`The TV count is ${originalListCount} on this list`;
-          weArray[1].innerHTML =`The TV count is ${favoritesListCount} on this list`;
+     countingArray[0].innerHTML = `The TV count is ${originalListCount} on this list`;
+         countingArray[1].innerHTML = `The TV count is ${favoritesListCount} on this list`;
         }
       }
     });
@@ -263,17 +250,14 @@ const contentWrapper = (name, type, pic) => {
   const textWrapperDiv = document.createElement("div");
   textWrapperDiv.setAttribute("class", "text-wrapper");
   animeWrapperItem[animeWrapperItem.length - 1].appendChild(textWrapperDiv);
-
-  const textWrapperItem = document.getElementsByClassName("text-wrapper");
+const textWrapperItem = document.getElementsByClassName("text-wrapper");
   const textWrapperH4 = document.createElement("h4");
   textWrapperH4.setAttribute("class", `animeName`);
-
-  textWrapperItem[textWrapperItem.length - 1].appendChild(textWrapperH4);
+textWrapperItem[textWrapperItem.length - 1].appendChild(textWrapperH4);
   const textWrapperH5 = document.createElement("h5");
   textWrapperH5.setAttribute("class", `type`);
   textWrapperH5.setAttribute("data-type", `${type}`);
-
-  textWrapperItem[textWrapperItem.length - 1].appendChild(textWrapperH5);
+textWrapperItem[textWrapperItem.length - 1].appendChild(textWrapperH5);
   document.getElementsByClassName(`animeName`)[
     textWrapperItem.length - 1
   ].innerHTML = `Name: ${name}`;
@@ -291,10 +275,8 @@ const animeList = (category, name, type, pic) => {
   const categoryItem = document.getElementsByClassName(`${category}`);
   const animeWrapperContainerDiv = document.createElement("div");
   animeWrapperContainerDiv.setAttribute("class", `anime-wrapper-container `);
-
-  animeWrapperContainerDiv.setAttribute("data-original", `${name}`);
-
-  animeWrapperContainerDiv.setAttribute("data-card", `${name}`);
+animeWrapperContainerDiv.setAttribute("data-original", `${name}`);
+animeWrapperContainerDiv.setAttribute("data-card", `${name}`);
   categoryItem[0].appendChild(animeWrapperContainerDiv);
   contentWrapper(name, type, pic);
   addToList();
@@ -317,19 +299,15 @@ const seperations = async (array) => {
         type: iterator.getAttribute("type"),
         pic: iterator.getElementsByTagName("info")[0].getAttribute("src"),
       };
-
-      infoArray.push(info);
-
-      if (info.pic) {
+ infoArray.push(info);
+if (info.pic) {
         animeList(char, info.name, info.type, info.pic);
       }
     }
   }
-  contentCounter('TV');
+  contentCounter("TV");
 
-  scrollToCategory();
-
-  clickAction();
+ clickAction();
 };
 
 seperations(figures);
